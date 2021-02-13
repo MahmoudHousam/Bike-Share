@@ -2,7 +2,7 @@ import time
 import pandas as pd
 import numpy as np
 
-"bikeshare python script scenario 1"
+"bikeshare python script scenario 2"
 
 CITY_DATA = {
     "chicago": "chicago.csv",
@@ -10,45 +10,18 @@ CITY_DATA = {
     "washington": "washington.csv",
 }
 
-month_index_1 = {
-    "JAN": "1",
-    "FEB": "2",
-    "MAR": "3",
-    "APR": "4",
-    "MAY": "5",
-    "JUN": "6",
-    "ALL": "ALL",
-}
+month_list = ["January", "February", "March", "April", "May", "June", "ALL"]
 
-month_index_2 = {
-    1: "January",
-    2: "February",
-    3: "March",
-    4: "April",
-    5: "May",
-    6: "June",
-}
-
-day_index_1 = {
-    "MON": 0,
-    "TUE": 1,
-    "WED": 2,
-    "THU": 3,
-    "FRI": 4,
-    "SAT": 5,
-    "SUN": 6,
-    "ALL": "ALL",
-}
-
-day_index_2 = {
-    0: "Monday",
-    1: "Tuesday",
-    2: "Wednesday",
-    3: "Thursday",
-    4: "Friday",
-    5: "Saturday",
-    6: "Sunday",
-}
+day_list = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+    "ALL",
+]
 
 
 def get_filters():
@@ -84,10 +57,10 @@ def get_filters():
         # get user input for month (All, january, february, ... , june)
         if not month_query:
             month = input(
-                "Choose one of these months: JAN, FEB, MAR, APR, MAY, JUN or All to explore All months: "
+                "Choose one of these months: January, February, March, April, May, June or ALL to explore All months: "
             )
-            month = month.upper()
-            if month not in month_index_1:
+            month = month.title()
+            if month not in month_list:
                 print("Not available. Please, enter a valid month!")
                 continue
             else:
@@ -98,10 +71,10 @@ def get_filters():
         # get user input for day of week (All, monday, tuesday, ... sunday)
         if not day_query:
             day = input(
-                "Choose one of these day: MON, TUE, WED, THU, FRI, SAT, SUN, or All to explore All days: "
+                "Choose one of these day: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday or ALL to explore All days: "
             )
-            day = day.upper()
-            if day not in day_index_1:
+            day = day.title()
+            if day not in day_list:
                 print("Not available. Please, enter a valid day!")
                 continue
             else:
@@ -129,18 +102,18 @@ def load_data(city, month, day):
 
     # extract start month from the Start time column to create Start Month column
     df["Start Month"], df["Start Day"], df["Start Hour"] = (
-        df["Start Time"].dt.month,
-        df["Start Time"].dt.dayofweek,
+        df["Start Time"].dt.month_name(),
+        df["Start Time"].dt.day_name(),
         df["Start Time"].dt.hour,
     )
 
     # filter on month, if month is specified
-    if month != month_index_1.get("ALL"):
-        df = df[df["Start Month"] == int(month_index_1.get(month))]
+    if month != "ALL":
+        df = df[df["Start Month"] == month]
 
     # filter on day, if day is specified
-    if day != day_index_1.get("ALL"):
-        df = df[df["Start Day"] == int(day_index_1.get(day))]
+    if day != "ALL":
+        df = df[df["Start Day"] == day]
 
     print("Done!")
     print("\nIt took {} seconds.".format(round((time.time() - start_time), 2)))
@@ -154,28 +127,24 @@ def time_stats(df, month, day):
     start_time = time.time()
 
     # display the most common month
-    if month == month_index_1.get("ALL"):
+    if month == "ALL":
         most_popular_month = df["Start Month"].dropna()
         if most_popular_month.empty:
             print("No popular month found. Please, refilter your data again!")
         else:
             most_popular_month = most_popular_month.mode()[0]
-            print(
-                "Most popular month is: {}".format(
-                    month_index_2.get(most_popular_month)
-                )
-            )
+            print("Most popular month is: {}".format(most_popular_month))
     else:
         print("Select All to get the most popular month instead of {}".format(month))
 
     # display the most common day of week
-    if day == day_index_1.get("ALL"):
+    if day == "ALL":
         most_popular_day = df["Start Day"].dropna()  # .mode()[0]
         if most_popular_day.empty:
             print("No popular day found. Please, refilter your data again!")
         else:
             most_popular_day = most_popular_day.mode()[0]
-            print("Most popular day is: {}".format(day_index_2.get(most_popular_day)))
+            print("Most popular day is: {}".format(most_popular_day))
     else:
         print(
             "Select All to get the most popular day instead of {}".format(day.title())
