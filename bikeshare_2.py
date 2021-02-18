@@ -10,7 +10,7 @@ CITY_DATA = {
     "washington": "washington.csv",
 }
 
-month_list = ["January", "February", "March", "April", "May", "June", "ALL"]
+month_list = ["January", "February", "March", "April", "May", "June", "All"]
 
 day_list = [
     "Monday",
@@ -20,7 +20,7 @@ day_list = [
     "Friday",
     "Saturday",
     "Sunday",
-    "ALL",
+    "All",
 ]
 
 
